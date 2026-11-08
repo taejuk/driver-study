@@ -55,7 +55,7 @@
 
 ### 답할 질문
 
-1. IRQ handler가 RX IRQ를 막는 이유는 무엇인가?
+1. IRQ handler가 RX IRQ를 막는 이유는 무엇인가? 인터럽트를 계속 처리하는 livelock 방지
 2. Interrupt Status를 지우는 것과 Interrupt Enable을 해제하는 것은 어떻게 다른가?
 3. `napi_schedule()` 호출 즉시 드라이버 `poll()`이 실행되는가?
 4. NAPI 스레드가 활성화된 경우 일반 softirq 경로와 무엇이 다른가?
@@ -85,10 +85,18 @@
 ### 해야 할 일
 
 - [ ] `napi->weight`, `netdev_budget`, `netdev_budget_usecs`의 차이를 정리한다.
+napi->weight: napi instance가 가지고 있는 budget
+netdev_budget: net_rx_action에서 가질 수 있는 데이터이다. 즉 여러 NAPI 객체들을 실행하면서 제한할 수 있는 budget이다.
+
 - [ ] `work < budget`와 `work == budget` 분기를 코드로 설명한다.
 - [ ] Budget을 모두 썼을 때 다시 poll할 수 있도록 하는 메커니즘을 추적한다.
+budget을 다 쓰면 repoll을 sd->poll_list에 추가함으로써 다시 실행할 수 있게 한다.
+
 - [ ] Poll이 완료되었다는 의미와 DMA 전송 자체가 완료되었다는 의미를 구분한다.
-- [ ] `napi_complete()`/`napi_complete_done()` 후 IRQ를 다시 켜는 경로를 연결한다.
+- [ ] `napi_complete()`/`
+()` 후 IRQ를 다시 켜는 경로를 연결한다.
+net_rps_action_and_irq_enable을 통해서 다시 실행할 수 있도록 한다.
+
 - [ ] 논문의 **packet-count quota**와 NAPI의 **budget**을 공통점/차이점으로 비교한다.
 
 ### 답할 질문

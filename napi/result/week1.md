@@ -30,3 +30,7 @@ napi는 하나의 thread만 실행 가능하다. 즉, 현재 kthread가 가지�
 kthread_should_stop : 해당 kernel thread가 멈춰야 하는지 확인.
 schedule : 현재 CPU를 양보하고 다른 작업을 하도록 수행.
 napi thread인 경우에는 실행할 수 있는 thread가 하나로 고정되어 있다. 그래서
+
+
+
+1. list를 어디서 가져오는가?
